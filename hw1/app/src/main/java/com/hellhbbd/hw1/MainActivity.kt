@@ -1,8 +1,7 @@
 package com.hellhbbd.hw1
 
 import android.os.Bundle
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.ListView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -13,6 +12,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
+    private val adapter by lazy {
+        VideoListViewAdapter()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,19 +26,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        lifecycleScope.launch(Dispatchers.Main) {
-            var videos = listOf<video>()
+        val listView = findViewById<ListView>(R.id.listView)
+        listView.adapter = adapter
 
-            withContext(Dispatchers.IO) {
-                videos = XMLParser().parseURL("https://www.youtube.com/feeds/videos.xml?channel_id=UCupvZG-5ko_eiXAupbDfxWw")
+        lifecycleScope.launch {
+            val videos = withContext(Dispatchers.IO) {
+                XMLParser().parseURL("https://www.youtube.com/feeds/videos.xml?channel_id=UCupvZG-5ko_eiXAupbDfxWw")
             }
-
-            val linearLayout = findViewById<LinearLayout>(R.id.main)
-            for (video in videos) {
-                val textView = android.widget.TextView(this@MainActivity)
-                textView.text = video.title
-                linearLayout.addView(textView)
-            }
+            adapter.videos = videos
         }
     }
 }

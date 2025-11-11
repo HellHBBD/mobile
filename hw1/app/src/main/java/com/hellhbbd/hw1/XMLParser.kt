@@ -1,5 +1,6 @@
 package com.hellhbbd.hw1
 
+import android.graphics.BitmapFactory
 import android.util.Log
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
@@ -16,14 +17,18 @@ class XMLParser {
             parser.setInput(URL(url).openStream(), null)
             var tag = parser.next()
             while (tag != XmlPullParser.END_DOCUMENT) {
-                if (tag == XmlPullParser.START_TAG) {
+                if (tag == XmlPullParser.START_TAG && parser.depth >= 3) {
                     when (parser.name) {
                         "id" -> {
                             video.id = parser.nextText()
-                            Log.i("id", video.id)
+                            Log.d("id", video.id)
                         }
                         "media:title" -> video.title = parser.nextText()
-                        "media:thumbnail" -> video.thumbnail = parser.getAttributeValue(null, "url")
+                        "media:thumbnail" -> {
+                            val url = parser.getAttributeValue(null, "url")
+                            Log.d("url", url)
+                            video.thumbnail = BitmapFactory.decodeStream(URL(url).openStream())
+                        }
                         "media:description" -> {
                             video.description = parser.nextText()
                             videos.add(video)
