@@ -15,20 +15,23 @@ class XMLParser {
         try {
             parser.setInput(URL(url).openStream(), null)
             var tag = parser.next()
-            while (tag != XmlPullParser.END_DOCUMENT && tag == XmlPullParser.START_TAG) {
-                when (parser.name) {
-                    "id" -> {
-                        video.id = parser.nextText()
-                        Log.i("id", video.id)
-                    }
-                    "media:title" -> video.title = parser.nextText()
-                    "media:thumbnail" -> video.thumbnail = parser.getAttributeValue(null, "url")
-                    "media:description" -> {
-                        video.description = parser.nextText()
-                        videos.add(video)
-                        video = video()
+            while (tag != XmlPullParser.END_DOCUMENT) {
+                if (tag == XmlPullParser.START_TAG) {
+                    when (parser.name) {
+                        "id" -> {
+                            video.id = parser.nextText()
+                            Log.i("id", video.id)
+                        }
+                        "media:title" -> video.title = parser.nextText()
+                        "media:thumbnail" -> video.thumbnail = parser.getAttributeValue(null, "url")
+                        "media:description" -> {
+                            video.description = parser.nextText()
+                            videos.add(video)
+                            video = video()
+                        }
                     }
                 }
+
                 tag = parser.next()
             }
         } catch (e: Exception) {
