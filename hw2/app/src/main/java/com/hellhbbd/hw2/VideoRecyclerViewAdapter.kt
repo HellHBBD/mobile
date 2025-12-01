@@ -1,20 +1,33 @@
 package com.hellhbbd.hw2
 
+import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.URL
 
-class VideoRecyclerViewAdapter(val data: List<video>): RecyclerView.Adapter<VideoRecyclerViewAdapter.ViewHolder>() {
-    var videos = data
+class VideoRecyclerViewAdapter(
+    initialData: List<video>,
+    private val scope: CoroutineScope,
+    private val listener: OnItemClickListener
+) : RecyclerView.Adapter<VideoRecyclerViewAdapter.ViewHolder>() {
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    var videos = initialData
         set(value) {
             field = value
             notifyDataSetChanged()
         }
+
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.imageView)
         val textTitle: TextView = itemView.findViewById(R.id.textTitle)
@@ -33,9 +46,17 @@ class VideoRecyclerViewAdapter(val data: List<video>): RecyclerView.Adapter<Vide
         holder: ViewHolder,
         position: Int
     ) {
-        holder.imageView.setImageBitmap(videos.get(position).thumbnail)
-        holder.textTitle.text = videos.get(position).title
-        holder.textDescription.text = videos.get(position).description
+        scope.launch {
+            val bitmap = withContext(Dispatchers.IO) {
+                BitmapFactory.decodeStream(URL(videos[position].thumbnail).openStream())
+            }
+            holder.imageView.setImageBitmap(bitmap)
+        }
+        holder.textTitle.text = videos[position].title
+        holder.textDescription.text = videos[position].description
+        holder.itemView.setOnClickListener {
+            listener.onItemClick(position)
+        }
     }
 
     override fun getItemCount() = videos.size

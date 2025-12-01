@@ -1,5 +1,6 @@
 package com.hellhbbd.hw2
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +12,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), VideoRecyclerViewAdapter.OnItemClickListener {
+    private val adapter by lazy {
+        VideoRecyclerViewAdapter(listOf(), lifecycleScope, this)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -24,12 +29,22 @@ class MainActivity : AppCompatActivity() {
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        recyclerView.adapter = adapter
 
         lifecycleScope.launch {
             val videos = withContext(Dispatchers.IO) {
                 XMLParser().parseURL("https://www.youtube.com/feeds/videos.xml?channel_id=UCupvZG-5ko_eiXAupbDfxWw")
             }
-            recyclerView.adapter = VideoRecyclerViewAdapter(videos)
+            adapter.videos = videos
         }
+    }
+
+    override fun onItemClick(position: Int) {
+//        Toast.makeText(this, adapter.videos[position].title, Toast.LENGTH_LONG).show()
+        val intent = Intent(this, PreviewActivity::class.java)
+        intent.putExtra("title", adapter.videos[position].title)
+        intent.putExtra("thumbnail", adapter.videos[position].thumbnail)
+        intent.putExtra("description", adapter.videos[position].description)
+        startActivity(intent)
     }
 }

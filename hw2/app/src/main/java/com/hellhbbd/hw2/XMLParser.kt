@@ -1,6 +1,5 @@
 package com.hellhbbd.hw2
 
-import android.graphics.BitmapFactory
 import android.util.Log
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
@@ -27,7 +26,7 @@ class XMLParser {
                         "media:thumbnail" -> {
                             val url = parser.getAttributeValue(null, "url")
                             Log.d("url", url)
-                            video.thumbnail = BitmapFactory.decodeStream(URL(url).openStream())
+                            video.thumbnail = url
                         }
                         "media:description" -> {
                             video.description = parser.nextText()
