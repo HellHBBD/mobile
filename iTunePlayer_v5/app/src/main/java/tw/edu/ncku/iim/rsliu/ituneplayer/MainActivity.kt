@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import tw.edu.ncku.iim.rsliu.ituneplayer.databinding.ActivitySwipeRefreshBinding
 
 class MainActivity : AppCompatActivity(), iTuneRecyclerViewAdapter.OnItemClickListener {
     val adapter by lazy {
@@ -31,18 +32,19 @@ class MainActivity : AppCompatActivity(), iTuneRecyclerViewAdapter.OnItemClickLi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_swipe_refresh)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.swipeRefreshLayout)) { v, insets ->
+        val binding = ActivitySwipeRefreshBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.swipeRefreshLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = binding.recyclerView
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val swipeRefreshLayout = findViewById<SwipeRefreshLayout>(R.id.swipeRefreshLayout)
+        val swipeRefreshLayout = binding.swipeRefreshLayout
         swipeRefreshLayout.setOnRefreshListener {
             swipeRefreshLayout.isRefreshing = true
             adapter.songs = listOf<SongData>()

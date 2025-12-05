@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import tw.edu.ncku.iim.rsliu.ituneplayer.databinding.ActivityPreviewBinding
 
 class PreviewActivity : AppCompatActivity() {
     var title: String? = null
@@ -20,8 +21,9 @@ class PreviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_preview)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        val binding = ActivityPreviewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -31,9 +33,9 @@ class PreviewActivity : AppCompatActivity() {
         cover = intent.getParcelableExtra<Bitmap>("cover")
         url = intent.getStringExtra("url")
 
-        val textView = findViewById<TextView>(R.id.textView)
+        val textView = binding.textView
         textView.text = title
-        val imageView = findViewById<ImageView>(R.id.imageView)
+        val imageView = binding.imageView
         imageView.setImageBitmap(cover)
     }
 
