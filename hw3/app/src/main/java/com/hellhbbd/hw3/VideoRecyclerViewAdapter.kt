@@ -2,11 +2,9 @@ package com.hellhbbd.hw3
 
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.hellhbbd.hw3.databinding.VideoListItemBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,32 +26,33 @@ class VideoRecyclerViewAdapter(
             notifyDataSetChanged()
         }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.imageView)
-        val textTitle: TextView = itemView.findViewById(R.id.textTitle)
-        val textDescription: TextView = itemView.findViewById(R.id.textDescription)
-    }
+    class ViewHolder(val binding: VideoListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        val layout = LayoutInflater.from(parent.context).inflate(R.layout.video_list_item, null)
-        return ViewHolder(layout)
+        val binding = VideoListItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(
         holder: ViewHolder,
         position: Int
     ) {
+        val video = videos[position]
         scope.launch {
             val bitmap = withContext(Dispatchers.IO) {
-                BitmapFactory.decodeStream(URL(videos[position].thumbnail).openStream())
+                BitmapFactory.decodeStream(URL(video.thumbnail).openStream())
             }
-            holder.imageView.setImageBitmap(bitmap)
+            holder.binding.imageView.setImageBitmap(bitmap)
         }
-        holder.textTitle.text = videos[position].title
-        holder.textDescription.text = videos[position].description
+        holder.binding.textTitle.text = video.title
+        holder.binding.textDescription.text = video.description
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
         }

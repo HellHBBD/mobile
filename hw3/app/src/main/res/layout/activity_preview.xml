@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context=".PreviewActivity">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
+        android:id="@+id/main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="32dp"
-        app:cardElevation="8dp"
-        app:cardCornerRadius="16dp"
-        app:contentPadding="0dp">
-        <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center_horizontal"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="24dp">
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="24dp"
-            android:id="@+id/imageView"
-            android:scaleType="centerCrop"
-            tools:src="@tools:sample/avatars"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/titleView"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp" />
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/descriptionView"
-            android:textSize="14sp"
-            android:textColor="#777777"
-            android:layout_marginTop="8dp"
-            android:paddingStart="24dp"
-            android:paddingEnd="24dp"
-            android:gravity="center_horizontal" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-</LinearLayout>
+            android:layout_margin="32dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="8dp"
+            app:contentPadding="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingBottom="24dp">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="24dp"
+                    android:scaleType="centerCrop"
+                    tools:src="@tools:sample/avatars" />
+
+                <TextView
+                    android:id="@+id/titleView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/descriptionView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="24dp"
+                    android:paddingEnd="24dp"
+                    android:textColor="#777777"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</layout>

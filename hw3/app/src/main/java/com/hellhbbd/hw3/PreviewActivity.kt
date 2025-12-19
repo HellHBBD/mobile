@@ -2,47 +2,43 @@ package com.hellhbbd.hw3
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import com.hellhbbd.hw3.databinding.ActivityPreviewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 
 class PreviewActivity : AppCompatActivity() {
-    var title: String? = null
-    var thumbnail: String? = null
-    var description: String? = null
+    private lateinit var binding: ActivityPreviewBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_preview)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityPreviewBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        title = intent.getStringExtra("title")
-        thumbnail = intent.getStringExtra("thumbnail")
-        description = intent.getStringExtra("description")
 
-        val titleView = findViewById<TextView>(R.id.titleView)
-        titleView.text = title
-        val descriptionView = findViewById<TextView>(R.id.descriptionView)
-        descriptionView.text = description
-        val imageView = findViewById<ImageView>(R.id.imageView)
+        val title = intent.getStringExtra("title")
+        val thumbnail = intent.getStringExtra("thumbnail")
+        val description = intent.getStringExtra("description")
+
+        binding.titleView.text = title
+        binding.descriptionView.text = description
 
         lifecycleScope.launch {
             val bitmap = withContext(Dispatchers.IO) {
                 BitmapFactory.decodeStream(URL(thumbnail).openStream())
             }
-            imageView.setImageBitmap(bitmap)
+            binding.imageView.setImageBitmap(bitmap)
         }
     }
 }
