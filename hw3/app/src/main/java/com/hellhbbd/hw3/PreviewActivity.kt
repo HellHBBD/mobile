@@ -2,6 +2,8 @@ package com.hellhbbd.hw3
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.webkit.WebChromeClient
+import android.webkit.WebViewClient
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -30,9 +32,12 @@ class PreviewActivity : AppCompatActivity() {
         val title = intent.getStringExtra("title")
         val thumbnail = intent.getStringExtra("thumbnail")
         val description = intent.getStringExtra("description")
+        val videoId = intent.getStringExtra("id")
 
         binding.titleView.text = title
         binding.descriptionView.text = description
+
+        setupWebView(videoId)
 
         lifecycleScope.launch {
             val bitmap = withContext(Dispatchers.IO) {
@@ -40,5 +45,34 @@ class PreviewActivity : AppCompatActivity() {
             }
             binding.imageView.setImageBitmap(bitmap)
         }
+    }
+
+    private fun setupWebView(videoId: String?) {
+        val id = videoId?.substringAfterLast(":")?.takeIf { it.isNotBlank() }
+            ?: "np56ZPV9SeU" // fallback demo ID
+
+        val iframe = """
+            <iframe id="player" type="text/html" width="100%" height="100%"
+                src="https://www.youtube.com/embed/$id?playsinline=1"
+                frameborder="0" allowfullscreen>
+            </iframe>
+        """.trimIndent()
+
+        val webView = binding.webView
+        webView.webChromeClient = WebChromeClient()
+        webView.webViewClient = WebViewClient()
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.mediaPlaybackRequiresUserGesture = true
+        webView.settings.loadWithOverviewMode = true
+        webView.settings.useWideViewPort = true
+
+        webView.loadDataWithBaseURL(
+            "http://hw3.hellhbbd.com",
+            iframe,
+            "text/html",
+            "utf-8",
+            null
+        )
     }
 }
