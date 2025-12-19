@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity(), VideoRecyclerViewAdapter.OnItemClickLi
         intent.putExtra("title", adapter.videos[position].title)
         intent.putExtra("thumbnail", adapter.videos[position].thumbnail)
         intent.putExtra("description", adapter.videos[position].description)
+        intent.putExtra("id", adapter.videos[position].id)
         startActivity(intent)
     }
 }
