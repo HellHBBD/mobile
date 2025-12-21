@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 
 class VideoRecyclerViewAdapter(
-    initialData: List<video>,
+    initialData: List<Video>,
     private val scope: CoroutineScope,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<VideoRecyclerViewAdapter.ViewHolder>() {
@@ -45,14 +45,14 @@ class VideoRecyclerViewAdapter(
         position: Int
     ) {
         val video = videos[position]
+        holder.binding.item = video
+        holder.binding.executePendingBindings()
         scope.launch {
             val bitmap = withContext(Dispatchers.IO) {
                 BitmapFactory.decodeStream(URL(video.thumbnail).openStream())
             }
             holder.binding.imageView.setImageBitmap(bitmap)
         }
-        holder.binding.textTitle.text = video.title
-        holder.binding.textDescription.text = video.description
         holder.itemView.setOnClickListener {
             listener.onItemClick(position)
         }

@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.hellhbbd.hw3.databinding.ActivityPreviewBinding
 import kotlinx.coroutines.Dispatchers
@@ -21,8 +22,8 @@ class PreviewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityPreviewBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_preview)
+        binding.lifecycleOwner = this
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -34,8 +35,13 @@ class PreviewActivity : AppCompatActivity() {
         val description = intent.getStringExtra("description")
         val videoId = intent.getStringExtra("id")
 
-        binding.titleView.text = title
-        binding.descriptionView.text = description
+        val video = Video().apply {
+            this.title = title.orEmpty()
+            this.description = description.orEmpty()
+            this.thumbnail = thumbnail.orEmpty()
+            this.id = videoId.orEmpty()
+        }
+        binding.video = video
 
         setupWebView(videoId)
 

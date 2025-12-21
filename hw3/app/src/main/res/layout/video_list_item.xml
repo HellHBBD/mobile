@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="item"
+            type="com.hellhbbd.hw3.Video" />
+    </data>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,6 +30,7 @@
                 android:id="@+id/textTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{item.title}"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -33,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="3"
+                android:text="@{item.description}"
                 android:textSize="14sp" />
         </LinearLayout>
 

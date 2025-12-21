@@ -8,9 +8,9 @@ import java.net.URL
 class XMLParser {
     val parser = XmlPullParserFactory.newInstance().newPullParser()
 
-    suspend fun parseURL(url: String): List<video> {
-        val videos = mutableListOf<video>()
-        var video = video()
+    suspend fun parseURL(url: String): List<Video> {
+        val videos = mutableListOf<Video>()
+        var video = Video()
 
         try {
             parser.setInput(URL(url).openStream(), null)
@@ -31,7 +31,7 @@ class XMLParser {
                         "media:description" -> {
                             video.description = parser.nextText()
                             videos.add(video)
-                            video = video()
+                            video = Video()
                         }
                     }
                 }
